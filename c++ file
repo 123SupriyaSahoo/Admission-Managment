@@ -1,0 +1,303 @@
+#include <iostream>
+#include <bits/stdc++.h>
+#include <cstdio>
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <cstdlib>
+#include <stdlib.h>
+#include <conio.h>
+#include <windows.h>
+#include <mysql.h>
+#include <mysqld_error.h>
+#include <iomanip>
+
+using namespace std;
+// CREATING  A GLOBAL VARIABLE
+const char *HOST = "localhost";
+const char *USER = "root";
+const char *PASSW = "Supriya@2004";
+const char *DB = "CGU";
+
+int qstate;
+MYSQL *conn;
+MYSQL_ROW row;
+MYSQL_RES *res;
+
+class db_response
+{
+public:
+	static void connectionFunction()
+	{
+		conn = mysql_init(NULL);
+		conn = mysql_real_connect(conn, HOST, USER, PASSW, DB, 3306, NULL, 0);
+		if (conn)
+		{
+			cout << "Database Connected..." ;
+			Sleep(2000);
+			system("cls");
+		}
+		else
+		{
+			cout << "Failed to connect!" << endl;
+			cout << mysql_error(conn) << endl;
+		}
+	}
+	static void connectionClose()
+	{
+		mysql_close(conn);
+	}
+};
+
+ class StudentAdmission
+    {
+    public:
+		string Regdno;
+		string FullName;
+		string DateOfBirth;
+		string Gender;
+		string Address;
+		string State;
+		string Country;
+		string ContactNumber;
+		string Email;
+		string Course;
+		string Branch;
+		string AdmissionFee;
+		string PreviousSchoolorcollege;
+		string FathersName;
+		string MothersName;
+		string ParentsContactNumber;
+		
+		void displaystudentInfo()
+        {
+	        cout << "Regdno: " << Regdno << endl;
+	        cout << "FullName: " << FullName << endl;
+	        cout << "DateOfBirth: " << DateOfBirth << endl;
+	        cout << "Gender: " << Gender << endl;
+	        cout << "Address: " << Address << endl;
+	        cout << "State: " << State << endl;
+	        cout << "Country: " << Country << endl;
+	        cout << "ContactNumber: " << ContactNumber << endl;
+	        cout << "Email: " << Email << endl;
+	        cout << "Course: " << Course << endl;
+			cout << "Branch: " <<Branch << endl;
+		    cout << "AdmissionFee: " << AdmissionFee << endl;
+		    cout << "PreviousSchoolorcollege: " << PreviousSchoolorcollege << endl;
+	        cout << "FathersName: " << FathersName << endl;
+	        cout << "MothersName: " << MothersName << endl;
+	        cout << "ParentsContactNumber: " << ParentsContactNumber << endl;
+	          
+        }
+    };	
+
+int main() 
+{
+	db_response::connectionFunction();
+	bool exit=false;
+	while(!exit){
+		system("cls");
+		int choice;
+		cout << endl
+             << "***C.V. RAMAN GLOBAL UNIVERSITY***" << endl;
+        cout << endl
+             << "CHOOSE THE BELOW OPTIONS TO PROCEED" << endl;
+        cout << " 1. ADD STUDENT DETAILS\n 2. LIST OF STUDENTS\n 3. Search Info\n 4. DELETE INFO\n 5. EXIT :)\n";
+       
+        cin >> choice;
+        
+        if (choice==1){
+        	string Regdno;
+			string FullName;
+			string DateOfBirth;
+			string Gender;
+			string Address;
+			string State;
+			string Country;
+			string ContactNumber;
+			string Email;
+			string Course;
+			string Branch;
+			string AdmissionFee;
+			string PreviousSchoolorcollege;
+			string FathersName;
+			string MothersName;
+			string ParentsContactNumber;
+		    
+		    cout << "Regdno: ";
+	        cin >> Regdno;
+	        cout << "FullName: ";
+	        cin >> FullName;
+	        cout << "DateOfBirth: ";
+	        cin >> DateOfBirth;
+	        cout << "Gender: ";
+	        cin >> Gender;
+	        cout << "Address: ";
+	        cin >> Address;
+	        cout << "State: ";
+	        cin >> State;
+	        cout << "Country: ";
+	        cin >> Country;
+	        cout << "ContactNumber: ";
+	        cin >> ContactNumber;
+	        cout << "Email: ";
+	        cin >> Email;
+	        cout << "Course: ";
+	        cin >> Course;
+	        cout << "Branch: ";
+            cin >> Branch;
+	        cout << "AdmissionFee: ";
+	        cin >> AdmissionFee;
+	        cout << "PreviousSchoolorcollege: ";
+	        cin >> PreviousSchoolorcollege;
+            cout << "FathersName: ";
+	        cin >> FathersName;
+	        cout << "MothersName: ";
+	        cin >> MothersName;
+	        cout << "ParentsContactNumber: ";
+	        cin >> ParentsContactNumber;
+	        
+	        string query = "INSERT INTO StudentAdmission (Regdno,FullName,DateOfBirth,Gender,Address,State,Country,ContactNumber,Email,Course,Branch,AdmissionFee,PreviousSchoolorcollege,FathersName,MothersName,ParentsContactNumber) VALUES ('" + Regdno + "','" + FullName + "','" + DateOfBirth + "','" + Gender + "','" + Address + "','" + State + "','" + Country + "','" + ContactNumber + "','" + Email + "','" + Course + "','" + Branch + "','" + AdmissionFee + "','" + PreviousSchoolorcollege + "','" + FathersName + "','" + MothersName + "','" + ParentsContactNumber + "' )";
+
+			if (mysql_query(conn, query.c_str()))
+			{
+				cout << mysql_error(conn) << endl;																										   
+				Sleep(10000);
+			}
+			else
+			{
+				cout << "Data inserted..." << endl<< endl;
+			}
+			Sleep(5000);
+	       
+		}
+	
+		else if(choice==2){
+			cout << "**STUDENT DETAILS***\n\n";
+	         qstate = mysql_query(conn, "select * from StudentAdmission");
+			if (!qstate)
+			{
+				res = mysql_store_result(conn);
+				printf("+-----+-------+----------------------+----------------------+---------------+-------------+-------+------------+\n");
+				printf("|%-6s | %-25s | %-10s | %-6s | %-30s | %-15s | %-10s | %-12s | %-35s | %-10s | %-20s | %-10s | %-35s | %-30s | %-30s | %-12s |\n", "Regdno","FullName","DateOfBirth","Gender","Address","State","Country","ContactNumber","Email","Course","Branch","AdmissionFee","PreviousSchoolorcollege","FathersName","MothersName","ParentsContactNumber");
+				printf("+-----+-------+----------------------+----------------------+---------------+-------------+-------+------------+\n");
+				while ((row = mysql_fetch_row(res)))
+				{
+					StudentAdmission currentStudentAdmission;
+                    currentStudentAdmission.Regdno = row[0];
+                    currentStudentAdmission.FullName = row[1];
+                    currentStudentAdmission.DateOfBirth = row[2];
+                    currentStudentAdmission.Gender = row[3];
+                    currentStudentAdmission.Address = row[4];
+                    currentStudentAdmission.State = row[5];
+                    currentStudentAdmission.Country = row[6];
+                    currentStudentAdmission.ContactNumber = row[7];
+                    currentStudentAdmission.Email = row[8];
+                    currentStudentAdmission.Course = row[9];
+                    currentStudentAdmission.Branch = row[10];
+                    currentStudentAdmission.AdmissionFee = row[11];
+                    currentStudentAdmission.PreviousSchoolorcollege = row[12];
+                    currentStudentAdmission.FathersName = row[13];
+                    currentStudentAdmission.MothersName = row[14];
+                    currentStudentAdmission.ParentsContactNumber = row[15];
+                    if (atoi(row[15]) > 0)
+					
+					{
+						printf("|%-10s | %-6s | %-20s | %-10s | %-10s | %-20s | %-20s | %-20s | %-5s | %-5s | %-5s | %-5s | %-5s | %-20s |\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]);
+					}
+					
+				}
+				printf("+-----+-------+----------------------+----------------------+---------------+-------------+-------+------------+\n");
+				getch();
+			}
+			else
+			{
+				cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+			}
+	
+		}
+		else if(choice==3)
+		{
+			string RegdNo;
+			cout<<"Enter RegdNo to search for:";
+			cin>>RegdNo;
+			string query = "select * from StudentAdmission where RegdNo = '" + RegdNo + "' ";
+			qstate = mysql_query(conn, query.c_str());
+			if (!qstate)
+			{
+				res = mysql_store_result(conn);
+				printf("+-----------+--------------+---------------+------------------+--------------+----------------++----------+-------------------------+--------------------+-------------+--------------------+\n");
+					printf("|%-6s | %-25s | %-10s | %-6s | %-30s | %-15s | %-10s | %-12s | %-35s | %-10s | %-20s | %-10s | %-35s | %-30s | %-30s | %-12s |\n", "Regdno","FullName","DateOfBirth","Gender","Address","State","Country","ContactNumber","Email","Course","Branch","AdmissionFee","PreviousSchoolorcollege","FathersName","MothersName","ParentsContactNumber");
+				printf("+-----------+--------------+---------------+------------------+--------------+----------------+------------+-------------------------+--------------------+-------------+--------------------+\n");
+				
+				while ((row = mysql_fetch_row(res)))
+				{
+					StudentAdmission currentStudentAdmission;
+                    currentStudentAdmission.Regdno = row[0];
+                    currentStudentAdmission.FullName = row[1];
+                    currentStudentAdmission.DateOfBirth = row[2];
+                    currentStudentAdmission.Gender = row[3];
+                    currentStudentAdmission.Address = row[4];
+                    currentStudentAdmission.State = row[5];
+                    currentStudentAdmission.Country = row[6];
+                    currentStudentAdmission.ContactNumber = row[7];
+                    currentStudentAdmission.Email = row[8];
+                    currentStudentAdmission.Course = row[9];
+                    currentStudentAdmission.Branch = row[10];
+                    currentStudentAdmission.AdmissionFee = row[11];
+                    currentStudentAdmission.PreviousSchoolorcollege = row[12];
+                    currentStudentAdmission.FathersName = row[13];
+                    currentStudentAdmission.MothersName = row[14];
+                    currentStudentAdmission.ParentsContactNumber = row[15];
+                    if (atoi(row[15]) > 0)
+					
+					{
+						printf("|%-10s | %-12s | %-13s | %-16s | %-12s | %-14s | %-11s | %-6s | %-8s | %-10s | %-23s | %-18s | %-11s | %-18s |\n", row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7], row[8], row[9], row[10], row[11], row[12], row[13]);
+					}
+					
+				}
+				printf("+-----------+--------------+---------------+------------------+--------------+----------------+-------------+--------+----------+------------+-------------------------+--------------------+-------------+--------------------+\n");
+		        getch(); 
+			}
+			
+			else 
+			{
+        		cout << "Query Execution Problem!" << mysql_errno(conn) << endl;
+   			}
+          
+		}
+		
+		else if(choice==4)
+		{
+			string regdno;
+	cout << endl
+		 << "Enter ID to delete: ";
+	cin >> regdno;
+
+	string query = "DELETE FROM studentadmission WHERE regdno = '" + regdno + "'";
+	if (mysql_query(conn, query.c_str()))
+	{
+		cout << mysql_error(conn) << endl;
+		Sleep(3000);
+	}
+	else
+	{
+		cout << "Item deleted..." << endl
+			 << endl;
+	}
+	Sleep(2000);
+		}	
+		
+		else if (choice == 5)
+        {
+            exit = true;
+        }
+        else
+        {
+            cout << "Invalid choice. Please try again.\n";
+        }
+	}
+	
+	db_response::connectionClose();
+	return 0;
+}
